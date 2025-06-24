@@ -1,0 +1,16 @@
+<html>
+<head>
+  <title>Add Event</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <h2>Add Event</h2>
+  <form method="POST">
+    <label>Name:</label><input type="text" name="name"><br>
+    <label>Description:</label><input type="text" name="description"><br>
+    <label>Date:</label><input type="date" name="date"><br>
+    <label>Time:</label><input type="time" name="time"><br>
+    <button type="submit">Add</button>
+  </form>
+</body>
+</html>

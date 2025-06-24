@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header {
+      text-align: left;
+      padding: 20px;
+      background-color: rgb(218, 234, 218);
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      padding: 15px 15px;
+      background-color: rgb(218, 234, 218);
+      gap: 0px;
+    }
+
+    .topbar a {
+      text-decoration: none;
+      background-color: #96b697;
+      color: rgb(8, 8, 8);
+      padding: 10px 10px;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    .topbar select {
+      padding: 10px;
+      font-size: 14px;
+    }
+
+    .content {
+      padding: 5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    table, th, td {
+      border: 1px solid #000000;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: center;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropbtn {
+  background-color: #96b697;
+  color: rgb(0, 0, 0);
+  padding: 10px 15px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+  z-index: 1;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 10px 15px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+</style>
+</head>
+<body>
+
+  <div class="header">
+    Welcome, {{ current_user.username }}
+  </div>
+  <div class="topbar">
+    <details class="dropdown">
+      <summary class="dropbtn">👤 Admins ▾</summary>
+      <div class="dropdown-content">
+        <a href="{{ url_for('dashboard', admin_id='all') }}">All</a>
+        {% for admin in admins %}
+          <a href="{{ url_for('dashboard', admin_id=admin.id) }}">{{ admin.username }}</a>
+        {% endfor %}
+      </div>
+    </details>
+    <a class="top-link" href="{{ url_for('add_event') }}">➕ Add Event</a>
+    <a class="top-link" text_align="left" href="{{ url_for('logout') }}">🚪 Logout</a>
+  </div>
+  <div class="content">
+    <h2 style="text-align:center;">Your Events</h2>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Actions</th>
+        <th>Feedback</th>
+        <th>Attendance</th>
+      </tr>
+      {% for event in events %}
+      <tr>
+        <td>{{ event.name }}</td>
+        <td>{{ event.description }}</td>
+        <td>{{ event.date }}</td>
+        <td>{{ event.time }}</td>
+        <td>
+          <a href="{{ url_for('update_event', event_id=event.id) }}">Update</a> |
+          <a href="{{ url_for('delete_event', event_id=event.id) }}">Delete</a>
+        </td>
+        <td>
+          {% if event_feedback[event.id] %}
+            <ul>
+              {% for fb, user in event_feedback[event.id] %}
+                <li><strong>{{ user.username }}:</strong> {{ fb.feedback }}</li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <em>No feedback yet</em>
+          {% endif %}
+        </td>
+        <td>
+          {% if event_attendance[event.id] %}
+            <ul>
+              {% for att, user in event_attendance[event.id] %}
+                <li><strong>{{ user.username }} </strong>: {{ 'Present' if att.present else 'Absent' }}</li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <em>No attendance yet</em>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+</body>
+</html>

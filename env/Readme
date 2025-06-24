@@ -1,0 +1,7 @@
+pip3 install virtualenv -- to install virtual environment
+virtualenv env -- to create a env folder in the application
+
+Activation part
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\env\Scripts\Activate.ps1
+

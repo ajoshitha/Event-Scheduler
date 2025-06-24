@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Home</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+<style>
+body.home-page {
+  margin: 0;
+  padding: 0;
+  background-image: url('../static/background2.jpg'); 
+  background-size: cover;
+  background-position: center;
+  font-family: Arial, sans-serif;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  text-align: center;
+  background-color: rgb(218, 234, 218); 
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+.links {
+  margin-top: 20px;
+}
+
+.links a {
+  margin: 0 15px;
+  padding: 10px 20px;
+  text-decoration: none;
+  background-color: #273d28;
+  color: white;
+  border-radius: 6px;
+  font-weight: bold;
+}
+</style>
+</head>
+<body class="home-page">
+  <div class="container">
+    <h1>Welcome to the Event Scheduler</h1>
+    <div class="links">
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<head>
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='student_dashboard.css') }}">
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="toast" id="toast">{{ messages[0] }}</div>
+        <script>
+          setTimeout(() => {
+            document.getElementById('toast').style.display = 'none';
+          }, 3000); 
+        </script>
+      {% endif %}
+    {% endwith %}
+<h2>Welcome, {{ current_user.username }} (Student)</h2>
+<a href="{{ url_for('logout') }}">Logout</a>
+<h3>Events that has been scheduled</h3>
+<table border="1">
+  <tr><th>Name</th><th>Description</th><th>Date</th><th>Time</th><th>Action</th></tr>
+  {% for event in events %}
+  <tr>
+    <td>{{ event.name }}</td>
+    <td>{{ event.description }}</td>
+    <td>{{ event.date }}</td>
+    <td>{{ event.time }}</td>
+    <td>
+      <form action="{{ url_for('mark_present', event_id=event.id) }}" method="POST" style="display:inline;">
+        {% set already_present = False %}
+        {% for attendance in event.attendances %}
+          {% if attendance.user_id == current_user.id and attendance.present %}
+            {% set already_present = True %}
+          {% endif %}
+        {% endfor %}
+        <button type="submit" {% if already_present %}disabled style="background-color: grey;"{% endif %}>
+          {% if already_present %}Marked{% else %}Mark Present{% endif %}
+        </button>
+      </form>
+      {% set already_feedback = False %}
+      {% for feedback in event.feedbacks %}
+        {% if feedback.user_id == current_user.id %}
+          {% set already_feedback = True %}
+        {% endif %}
+      {% endfor %}
+      <form action="{{ url_for('submit_feedback', event_id=event.id) }}" method="POST" style="display:inline;">
+        <input type="text" name="feedback" placeholder="Your feedback"
+               {% if already_feedback %}disabled value="Already submitted"{% endif %}>
+        <button type="submit" {% if already_feedback %}disabled style="background-color: grey;"{% endif %}>
+          Submit Feedback
+        </button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+</body>
+
