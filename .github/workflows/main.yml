@@ -1,0 +1,52 @@
+name: Flask CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: rootpass
+          MYSQL_DATABASE: event_scheduler
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -prootpass" --health-interval=10s --health-timeout=5s --health-retries=5
+
+    env:
+      DB_USER: root
+      DB_PASSWORD: rootpass
+      DB_NAME: event_scheduler
+      DB_HOST: 127.0.0.1
+      FLASK_ENV: testing
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Wait for MySQL to be ready
+      run: |
+        until mysqladmin ping -h 127.0.0.1 -uroot -prootpass --silent; do
+          echo "Waiting for MySQL..."; sleep 2;
+        done
+
+    - name: Run pytest
+      run: |
+        pytest tests/
