@@ -49,5 +49,5 @@ jobs:
 
     - name: Run pytest
       run: | 
-        pytest # Or python -m unittest test.py
+        pytest tests/
        
