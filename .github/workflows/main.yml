@@ -49,5 +49,5 @@ jobs:
 
     - name: Run pytest
       run: | 
-        Event-Scheduler/test.py
+        pytest # Or python -m unittest test.py
        
