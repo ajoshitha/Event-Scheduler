@@ -48,5 +48,6 @@ jobs:
         done
 
     - name: Run pytest
-      run: |
-        pytest tests/
+      run: | 
+        Event-Scheduler/test.py
+       
