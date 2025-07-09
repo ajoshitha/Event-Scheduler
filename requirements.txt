@@ -1,0 +1,5 @@
+Flask
+pytest
+Flask-Login
+Flask-SQLAlchemy
+PyMySQL
